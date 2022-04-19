@@ -38,13 +38,8 @@ $TemplateParameters = @{
 $DeploymentResult = New-AzDeployment -Location $Location -Name "$WorkloadName-$Environment-$(Get-Date -Format 'yyyyMMddThhmmssZ' -AsUTC)" `
 	-TemplateFile ".\main.bicep" -TemplateParameterObject $TemplateParameters
 
-$DeploymentResult
-
 if ($DeploymentResult.ProvisioningState -eq 'Succeeded') {
 	$Outputs = $DeploymentResult.Outputs
-
-	$OutputsEx = $Outputs | Select-Object -Property Name, Value
-	$OutputsEx
 
 	Write-Host "`nGitHub Repository or Organization Actions Secrets:`n"
 	Write-Host "AZURE_CREDENTIALS     = <pending>"
@@ -53,6 +48,13 @@ if ($DeploymentResult.ProvisioningState -eq 'Succeeded') {
 	Write-Host "REGISTRY_PASSWORD     = $($Outputs.containerRegistryKey.Value)"
 	Write-Host "RESOURCE_GROUP        = $($Outputs.resourceGroupName.Value)"
 	Write-Host "ST_ACCOUNT_KEY        = $($Outputs.storageAccountKey.Value)"
+
+	Write-Host "`nPlease assign AAD users or groups to the AVD desktop application group"
+	Write-Host "`nPlease assign Virtual Machine User Login role at the resource group level"
+	Write-Host "`nPlease create custom role for VM Start on Connect: https://docs.microsoft.com/en-us/azure/virtual-desktop/start-virtual-machine-connect#create-a-custom-role-for-start-vm-on-connect"
+
+	Write-Host "`nCompleted!`n"
 }
 else {
+	$DeploymentResult
 }

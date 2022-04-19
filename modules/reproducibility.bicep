@@ -35,12 +35,16 @@ resource auditContainerRegistry 'Microsoft.Insights/diagnosticSettings@2021-05-0
 
 var subnets = [
   {
+    name: 'default'
+    addressPrefix: '10.21.0.0/26'
+  }
+  {
     name: 'aci'
     addressPrefix: '10.21.0.128/26'
   }
   {
-    name: 'default'
-    addressPrefix: '10.21.0.0/26'
+    name: 'avd'
+    addressPrefix: '10.21.0.64/26'
   }
 ]
 
@@ -113,9 +117,17 @@ resource fileShare 'Microsoft.Storage/storageAccounts/fileServices/shares@2021-0
   }
 }
 
+module avd 'avd.bicep' = {
+  name: 'avd'
+  params: {
+    location: location
+    avdSubnetId: '${virtualNetwork.id}/subnets/${subnets[2].name}'
+    namingStructure: namingStructure
+    logAnalyticsWorkspaceId: logAnalyticsWorkspace.id
+  }
+}
+
 output storageAccountKey string = storageAccount.listKeys().keys[0].value
 output containerRegistryUrl string = containerRegistry.properties.loginServer
 output containerRegistryKey string = containerRegistry.listCredentials().passwords[0].value
 output containerRegistryUser string = containerRegistry.listCredentials().username
-
-// TODO: Add AVD + start-on-connect + RBAC
