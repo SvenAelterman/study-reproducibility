@@ -30,4 +30,53 @@ Access the desktop via [https://aka.ms/wvdarmweb](https://aka.ms/wvdarmweb).
   - AIM -> Add Role -> "Virtual Machine Administrator/User Login" as appropriate
   - AIM -> Add Role -> "Windows Virtual Desktop" (x2) -> "Virtual Machine Contributor"
   
+## Initial installs
+
+- May need to install "App Installer" - should be installed, but was not in this case (maybe not accessible to non-root user?)
+- Install the following apps: [needs automation]
+```
+winget install vscode
+winget install Git.Git
+winget install Github.cli
+```
+
+- Map network drive [needs automation]
+```
+net use U: \\STORAGEACOUNT.file.core.windows.net\study-repro /user:Azure\STORAGEACCOUNT /global /savecred PASSWORD
+```
+where STORAGEACCOUNT and PASSWORD need to be replaced.
+
+Service principal: IL-LDI-AzureAutomation
+
+## Set a few secrets
+
+```
+for SECRET in AZURE_CREDENTIALS REGISTRY_LOGIN_SERVER REGISTRY_PASSWORD REGISTRY_USERNAME RESOURCE_GROUP ST_ACCOUNT_KEY
+do
+gh secret set $SECRET --org labordynamicsinstitute --visibility private 
+done
+```
+
+```
+AZURE_CREDENTIALS     = (JSON)
+
+(portal -> rg -> CR -> Access keys)
+REGISTRY_LOGIN_SERVER = crreprovmtesteastus01.azurecr.io
+REGISTRY_PASSWORD     = (see there)
+REGISTRY_USERNAME     = crreprovmtesteastus01
+RESOURCE_GROUP
+ST_ACCOUNT_KEY
+SUBNET_ID
+```
+
+## Get the Azure Credentials
+
+Azure Portal > App registrations > Certificates and Secrets
+
+In this case, Service Principal is called "IL-LDI-AzureAutomation".
+
+The Service Principal now needs to get the right permissions.
+
+RG -> Add role -> Contributor
+CR -> Add role -> ACRPUSH
 
