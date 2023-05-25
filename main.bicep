@@ -46,3 +46,6 @@ output containerRegistryKey string = reproducibilityModule.outputs.containerRegi
 output containerRegistryUser string = reproducibilityModule.outputs.containerRegistryUser
 
 output resourceGroupName string = workloadResourceGroup.name
+
+// TODO: Use Log Analytics Workspace for AVD logging
+// TODO: RBAC assignments for AVD

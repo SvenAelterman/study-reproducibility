@@ -76,6 +76,7 @@ resource vmDeployment 'Microsoft.Resources/deployments@2021-04-01' = {
         value: 'AzureUser'
       }
       vmAdministratorAccountPassword: {
+        // TODO: Parameter
         value: 'Test1234'
       }
       administratorAccountUsername: {
